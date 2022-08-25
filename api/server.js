@@ -20,6 +20,13 @@ app.get('/todos', async (req, res) => {
     res.json(todos);
 });
 
+app.get('/todo/complete/:id', async (req, res) => {
+    const todo = await Todo.findById(req.params.id);
+    todo.complete = !todo.complete;
+    todo.save();
+    res.json(todo);
+});
+
 app.post('/todo/new', (req, res) => {
     const todo = new Todo({
         text: req.body.text
@@ -28,16 +35,9 @@ app.post('/todo/new', (req, res) => {
     res.json(todo);
 });
 
-app.delete('/todo/delete/:id', async(req, res) => {
+app.delete('/todo/delete/:id', async (req, res) => {
     const result = await Todo.findByIdAndDelete(req.params.id);
-    res.json(result);
+    res.json({result});
 });
-
-app.put('/todo/complete/:id', async(req,res)=>{
-    const todo = await Todo.findById(req.params.id);
-    todo.complete = !todo.complete;
-    todo.save();
-    res.json(todo);
-})
 
 app.listen(3001, () => console.log("Server started on port 3001"));
